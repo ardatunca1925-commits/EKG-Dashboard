@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# CSS TASARIM
+# TEMA
 st.markdown("""
 <style>
 
@@ -40,13 +40,19 @@ st.title("❤️ Akıllı EKG İzleme Sistemi")
 
 st.markdown("### Gerçek Zamanlı Hasta Takip Paneli")
 
-# GOOGLE SHEETS
+# GOOGLE SHEETS CSV LİNKİ
 sheet_url = "https://docs.google.com/spreadsheets/d/1qy1Lg1u30yebc3EWIIlyVhKWhYAHzSTMGeVCS2E9yFE/export?format=csv"
 
 # VERİYİ ÇEK
 df = pd.read_csv(sheet_url)
 
-# SON BPM
+# BPM sütununu temizle
+df["BPM"] = pd.to_numeric(df["BPM"], errors="coerce")
+
+# Boş verileri kaldır
+df = df.dropna()
+
+# Son BPM değeri
 last_bpm = int(df["BPM"].iloc[-1])
 
 # DURUM HESABI
@@ -78,9 +84,10 @@ with col3:
         value=time.strftime("%H:%M:%S")
     )
 
-# GRAFİK
+# ÇİZGİ
 st.markdown("---")
 
+# GRAFİK
 st.subheader("📈 Canlı BPM Grafiği")
 
 st.line_chart(df["BPM"])
@@ -88,15 +95,11 @@ st.line_chart(df["BPM"])
 # TABLO
 st.markdown("---")
 
-st.subheader("📋 Son Veriler")
+st.subheader("📋 Son Ölçümler")
 
 st.dataframe(df.tail(10))
 
 # OTOMATİK YENİLEME
-df["BPM"] = pd.to_numeric(df["BPM"], errors="coerce")
-
-df = df.dropna()
-
-last_bpm = int(df["BPM"].iloc[-1])
 time.sleep(2)
+
 st.rerun()
