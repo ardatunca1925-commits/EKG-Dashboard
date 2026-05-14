@@ -93,5 +93,10 @@ st.subheader("📋 Son Veriler")
 st.dataframe(df.tail(10))
 
 # OTOMATİK YENİLEME
+df["BPM"] = pd.to_numeric(df["BPM"], errors="coerce")
+
+df = df.dropna()
+
+last_bpm = int(df["BPM"].iloc[-1])
 time.sleep(2)
 st.rerun()
