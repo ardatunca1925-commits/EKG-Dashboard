@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-import time
 
 # SAYFA AYARI
 st.set_page_config(
@@ -54,22 +53,19 @@ st.markdown("""
     color: white;
 }
 
-/* BPM Yazısı */
+/* Renkler */
 .red {
     color: #ff4b4b;
 }
 
-/* Yeşil */
 .green {
     color: #00ff88;
 }
 
-/* Mavi */
 .blue {
     color: #3b82f6;
 }
 
-/* Mor */
 .purple {
     color: #a855f7;
 }
@@ -93,14 +89,29 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# GOOGLE SHEETS
+# BAŞLIK
+st.markdown("""
+<div class="main-title">
+❤️ AKILLI EKG İZLEME SİSTEMİ
+</div>
+
+<div class="sub-title">
+Gerçek Zamanlı Hasta Takip Paneli
+</div>
+""", unsafe_allow_html=True)
+
+st.write("")
+
+# GOOGLE SHEETS CSV LİNKİ
 sheet_url = "https://docs.google.com/spreadsheets/d/1qy1Lg1u30yebc3EWIIlyVhKWhYAHzSTMGeVCS2E9yFE/export?format=csv"
 
-# VERİ ÇEK
+# VERİYİ ÇEK
 df = pd.read_csv(sheet_url)
 
-# BPM temizle
+# BPM TEMİZLE
 df["BPM"] = pd.to_numeric(df["BPM"], errors="coerce")
+
+# BOŞ VERİLERİ SİL
 df = df.dropna()
 
 # SON BPM
@@ -114,25 +125,13 @@ elif last_bpm > 120:
 else:
     durum = "Normal"
 
-# ÜST BAŞLIK
-st.markdown("""
-<div class="main-title">
-❤️ AKILLI EKG İZLEME SİSTEMİ
-</div>
-<div class="sub-title">
-Gerçek Zamanlı Hasta Takip Paneli
-</div>
-""", unsafe_allow_html=True)
-
-st.write("")
-
 # ÜST KARTLAR
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.markdown(f"""
     <div class="card">
-        <div class="card-title">BPM</div>
+        <div class="card-title">❤️ BPM</div>
         <div class="card-value red">{last_bpm}</div>
     </div>
     """, unsafe_allow_html=True)
@@ -140,7 +139,7 @@ with col1:
 with col2:
     st.markdown(f"""
     <div class="card">
-        <div class="card-title">DURUM</div>
+        <div class="card-title">📡 DURUM</div>
         <div class="card-value green">{durum}</div>
     </div>
     """, unsafe_allow_html=True)
@@ -148,7 +147,7 @@ with col2:
 with col3:
     st.markdown(f"""
     <div class="card">
-        <div class="card-title">ÖLÇÜM SAYISI</div>
+        <div class="card-title">📊 ÖLÇÜM SAYISI</div>
         <div class="card-value blue">{len(df)}</div>
     </div>
     """, unsafe_allow_html=True)
@@ -156,7 +155,7 @@ with col3:
 with col4:
     st.markdown(f"""
     <div class="card">
-        <div class="card-title">BAĞLANTI</div>
+        <div class="card-title">📶 BAĞLANTI</div>
         <div class="card-value purple">İYİ</div>
     </div>
     """, unsafe_allow_html=True)
@@ -181,6 +180,7 @@ with left:
         y=df["BPM"],
         mode='lines+markers',
         line=dict(color='#ff4b4b', width=3),
+        name="BPM"
     ))
 
     fig.update_layout(
@@ -211,7 +211,7 @@ with right:
 
 st.write("")
 
-# ALT KUTULAR
+# ALT BİLGİLER
 f1, f2, f3 = st.columns(3)
 
 with f1:
@@ -238,6 +238,6 @@ with f3:
     </div>
     """, unsafe_allow_html=True)
 
-# CANLI YENİLEME
-time.sleep(2)
-st.rerun()
+# ALT DURUM
+st.write("")
+st.caption("🔴 Sistem canlı olarak çalışıyor")
